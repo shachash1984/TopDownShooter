@@ -2,7 +2,10 @@
 
 
 #include "ShootingComponent.h"
+
+#include "Projectile.h"
 #include "TopDownShooter/TopDownShooter.h"
+#include "TopDownShooter/TopDownShooterCharacter.h"
 
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
@@ -14,9 +17,33 @@ UShootingComponent::UShootingComponent()
 	// ...
 }
 
-void UShootingComponent::Shoot(FVector ShootLocation) const
+void UShootingComponent::Shoot(FVector& ShootFromLocation, FVector& ShootToLocation) const
 {
-	UE_LOG(LogTopDownShooter, Log, TEXT("Shooting on (%f, %f, %f)"), ShootLocation.X, ShootLocation.Y, ShootLocation.Z);
+	UE_LOG(LogTopDownShooter, Log, TEXT("Shooting from (%f, %f, %f) , To: (%f, %f, %f)"), ShootFromLocation.X, ShootFromLocation.Y, ShootFromLocation.Z, ShootToLocation.X, ShootToLocation.Y, ShootToLocation.Z);
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		auto Owner = static_cast<ATopDownShooterCharacter*>(GetOwner());
+		if (Owner)
+		{
+			if (Owner->GetProjectileClass())
+			{
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = Owner;
+				SpawnParams.Instigator = Owner->GetInstigator();
+
+				// Spawn the projectile at the muzzle
+				AProjectile* Projectile = World->SpawnActor<AProjectile>(Owner->GetProjectileClass(), ShootFromLocation, Owner->GetActorRotation(), SpawnParams);
+				if (Projectile)
+				{
+					// Set the projectile's initial trajectory
+					FVector LaunchDirection = Owner->GetActorRotation().Vector();
+					Projectile->ShootInDirection(LaunchDirection);
+				}
+			}
+		}
+		
+	}
 }
 
 

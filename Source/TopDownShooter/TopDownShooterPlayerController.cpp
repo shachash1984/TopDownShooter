@@ -109,10 +109,10 @@ void ATopDownShooterPlayerController::OnTouchReleased(const ETouchIndex::Type Fi
 
 void ATopDownShooterPlayerController::OnShootPressed()
 {
-	auto GetBruhCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter());
-	if (GetBruhCharacter)
+	auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
+	if (TopDownCharacter)
 	{
-		UShootingComponent* ShootingComponent = GetBruhCharacter->GetShootingComponent();
+		UShootingComponent* ShootingComponent = TopDownCharacter->GetShootingComponent();
 		if (ShootingComponent)
 		{
 			// We look for the location in the world where the player has pressed the input
@@ -120,7 +120,8 @@ void ATopDownShooterPlayerController::OnShootPressed()
 			FHitResult Hit;
 			GetHitResultUnderCursor(ECC_Visibility, true, Hit);
 			HitLocation = Hit.Location;
-			ShootingComponent->Shoot(HitLocation);
+			FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + TopDownCharacter->MuzzleOffset;
+			ShootingComponent->Shoot(MuzzleLocation, HitLocation);
 		}
 	}
 }
