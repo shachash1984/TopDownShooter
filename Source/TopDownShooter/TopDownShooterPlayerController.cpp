@@ -109,18 +109,32 @@ void ATopDownShooterPlayerController::OnTouchReleased(const ETouchIndex::Type Fi
 
 void ATopDownShooterPlayerController::OnShootPressed()
 {
-	auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
+	const auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
 	if (TopDownCharacter)
 	{
-		UShootingComponent* ShootingComponent = TopDownCharacter->GetShootingComponent();
+		const UShootingComponent* ShootingComponent = TopDownCharacter->GetShootingComponent();
 		if (ShootingComponent)
 		{
+			
 			// We look for the location in the world where the player has pressed the input
 			FVector HitLocation = FVector::ZeroVector;
 			FHitResult Hit;
 			GetHitResultUnderCursor(ECC_Visibility, true, Hit);
 			HitLocation = Hit.Location;
-			FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + TopDownCharacter->MuzzleOffset;
+
+			// rotate the character to the cursor
+			TopDownCharacter->RotateToCursor(HitLocation);
+
+			FVector ViewRotationVector = TopDownCharacter->GetActorRotation().Vector();
+			ViewRotationVector.Normalize();
+			UE_LOG(LogTopDownShooter, Log, TEXT("ActorPos (%f, %f, %f) , To: (%f, %f, %f)"),
+				TopDownCharacter->GetActorLocation().X,
+				TopDownCharacter->GetActorLocation().Y,
+				TopDownCharacter->GetActorLocation().Z,
+				ViewRotationVector.X,
+				ViewRotationVector.Y,
+				ViewRotationVector.Z);
+			FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + ViewRotationVector * TopDownCharacter->MuzzleOffset;
 			ShootingComponent->Shoot(MuzzleLocation, HitLocation);
 		}
 	}

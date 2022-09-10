@@ -62,3 +62,17 @@ TSubclassOf<AProjectile> ATopDownShooterCharacter::GetProjectileClass() const
 {
 	return ProjectileClass;
 }
+
+void ATopDownShooterCharacter::RotateToCursor(const FVector& MouseCursor)
+{
+	FRotator wantedRotation = GetActorRotation();
+	FVector lookDir = MouseCursor - GetActorLocation();
+	if (lookDir.Normalize())
+	{
+		// convert FVector to rotation
+		const float yaw = FMath::RadiansToDegrees(FMath::Atan2(lookDir.Y, lookDir.X));
+		wantedRotation.SetComponentForAxis(EAxis::Z, yaw);
+	}
+	
+	SetActorRotation(wantedRotation);
+}

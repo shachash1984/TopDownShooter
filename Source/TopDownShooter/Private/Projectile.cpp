@@ -8,6 +8,7 @@ AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 
     if (!RootComponent)
     {
@@ -31,8 +32,8 @@ AProjectile::AProjectile()
         ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
         //ProjectileMovementComponent->InitialSpeed = 3000.0f;
         //ProjectileMovementComponent->MaxSpeed = 3000.0f;
-        ProjectileMovementComponent->InitialSpeed = 1.0f;
-        ProjectileMovementComponent->MaxSpeed = 1.0f;
+        ProjectileMovementComponent->InitialSpeed = InitialSpeed;
+        ProjectileMovementComponent->MaxSpeed = 1000.0f;
         ProjectileMovementComponent->bRotationFollowsVelocity = true;
         ProjectileMovementComponent->bShouldBounce = true;
         ProjectileMovementComponent->Bounciness = 0.3f;
@@ -53,9 +54,10 @@ AProjectile::AProjectile()
     if (Material.Succeeded())
     {
         ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
+		ProjectileMaterialInstance->SetVectorParameterValue("Color", FLinearColor::Black);
     }
     ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
-    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.05f, 0.02f, 0.02f));
     ProjectileMeshComponent->SetupAttachment(RootComponent);
 }
 
@@ -63,7 +65,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetLifeSpan(5.0f);
 }
 
 // Called every frame

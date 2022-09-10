@@ -29,6 +29,8 @@ public:
 	/** Returns the Projectile class*/
 	TSubclassOf<class AProjectile> GetProjectileClass() const;
 
+	void RotateToCursor(const FVector& MouseCursor);
+
 	// Gun muzzle offset from the character location
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	FVector MuzzleOffset;

@@ -29,13 +29,16 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 	USphereComponent* CollisionComponent;
 
-	// Projectile movement component
-	UPROPERTY(VisibleAnywhere, Category = Movement)
-	UProjectileMovementComponent* ProjectileMovementComponent;
-
 	// Projectile mesh
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 	UStaticMeshComponent* ProjectileMeshComponent;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+	float InitialSpeed{1000.0f};
+
+	// Projectile movement component
+	UPROPERTY(VisibleAnywhere, Category = Movement)
+	UProjectileMovementComponent* ProjectileMovementComponent;	
 
 	// Projectile Material
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
