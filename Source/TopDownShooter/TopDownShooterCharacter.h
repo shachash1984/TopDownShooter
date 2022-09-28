@@ -14,6 +14,8 @@ class ATopDownShooterCharacter : public ACharacter
 public:
 	ATopDownShooterCharacter();
 
+	void virtual GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -29,6 +31,7 @@ public:
 	/** Returns the Projectile class*/
 	TSubclassOf<class AProjectile> GetProjectileClass() const;
 
+	UFUNCTION(Server, Reliable)
 	void RotateToCursor(const FVector& MouseCursor);
 
 	// Gun muzzle offset from the character location
@@ -47,7 +50,7 @@ private:
 protected:
 
 	/** Component responsible for shooting */
-	UPROPERTY(VisibleAnywhere, Category = Shooting)
+	UPROPERTY(VisibleAnywhere, Category = Shooting, Replicated)
 	class UShootingComponent* ShootingComponent;
 
 	/** Projectile class to spawn*/

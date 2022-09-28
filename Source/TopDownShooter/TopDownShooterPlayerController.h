@@ -44,6 +44,9 @@ protected:
 	/** Input handlers for OnShootPressed action */
 	virtual void OnShootPressed();
 
+	UFUNCTION(Server, Reliable)
+	void HandleFire();
+
 private:
 	bool bInputPressed; // Input is bring pressed
 	bool bIsTouch; // Is it a touch device

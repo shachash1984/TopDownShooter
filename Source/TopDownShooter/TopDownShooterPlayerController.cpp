@@ -109,6 +109,11 @@ void ATopDownShooterPlayerController::OnTouchReleased(const ETouchIndex::Type Fi
 
 void ATopDownShooterPlayerController::OnShootPressed()
 {
+	HandleFire();
+}
+
+void ATopDownShooterPlayerController::HandleFire_Implementation()
+{
 	const auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
 	if (TopDownCharacter)
 	{
@@ -127,13 +132,13 @@ void ATopDownShooterPlayerController::OnShootPressed()
 
 			FVector ViewRotationVector = TopDownCharacter->GetActorRotation().Vector();
 			ViewRotationVector.Normalize();
-			UE_LOG(LogTopDownShooter, Log, TEXT("ActorPos (%f, %f, %f) , To: (%f, %f, %f)"),
+			/*UE_LOG(LogTopDownShooter, Log, TEXT("ActorPos (%f, %f, %f) , To: (%f, %f, %f)"),
 				TopDownCharacter->GetActorLocation().X,
 				TopDownCharacter->GetActorLocation().Y,
 				TopDownCharacter->GetActorLocation().Z,
 				ViewRotationVector.X,
 				ViewRotationVector.Y,
-				ViewRotationVector.Z);
+				ViewRotationVector.Z);*/
 			FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + ViewRotationVector * TopDownCharacter->MuzzleOffset;
 			ShootingComponent->Shoot(MuzzleLocation, HitLocation);
 		}

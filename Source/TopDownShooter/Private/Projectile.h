@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
+	void virtual GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,18 +28,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Sphere collision component
-	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile, Replicated)
 	USphereComponent* CollisionComponent;
 
 	// Projectile mesh
-	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile, Replicated)
 	UStaticMeshComponent* ProjectileMeshComponent;
 
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	float InitialSpeed{1000.0f};
 
 	// Projectile movement component
-	UPROPERTY(VisibleAnywhere, Category = Movement)
+	UPROPERTY(VisibleAnywhere, Category = Movement, Replicated)
 	UProjectileMovementComponent* ProjectileMovementComponent;	
 
 	// Projectile Material

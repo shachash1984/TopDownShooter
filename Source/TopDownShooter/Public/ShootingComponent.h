@@ -15,7 +15,8 @@ class TOPDOWNSHOOTER_API UShootingComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UShootingComponent();
-	virtual void Shoot(FVector& ShootFromLocation, FVector& ShootToLocation) const;
+
+	virtual void Shoot(FVector const& ShootFromLocation, FVector const& ShootToLocation) const;
 
 protected:
 	// Called when the game starts

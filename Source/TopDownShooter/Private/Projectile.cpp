@@ -3,12 +3,14 @@
 
 #include "Projectile.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values
 AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+	bReplicates = true;
 
     if (!RootComponent)
     {
@@ -21,6 +23,10 @@ AProjectile::AProjectile()
         CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
         // Set the sphere's collision radius
         CollisionComponent->SetSphereRadius(15.0f);
+
+        CollisionComponent->SetNetAddressable();
+		CollisionComponent->SetIsReplicated(true);
+
         // Set the Root component to be the collision component
         RootComponent = CollisionComponent;
     }
@@ -30,14 +36,14 @@ AProjectile::AProjectile()
 	    // Use this component to drive this projectile's movement
         ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
         ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-        //ProjectileMovementComponent->InitialSpeed = 3000.0f;
-        //ProjectileMovementComponent->MaxSpeed = 3000.0f;
         ProjectileMovementComponent->InitialSpeed = InitialSpeed;
         ProjectileMovementComponent->MaxSpeed = 1000.0f;
         ProjectileMovementComponent->bRotationFollowsVelocity = true;
         ProjectileMovementComponent->bShouldBounce = true;
         ProjectileMovementComponent->Bounciness = 0.3f;
         ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+        ProjectileMovementComponent->SetNetAddressable();
+        ProjectileMovementComponent->SetIsReplicated(true);
     }
 
     if (!ProjectileMeshComponent)
@@ -59,6 +65,8 @@ AProjectile::AProjectile()
     ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
     ProjectileMeshComponent->SetRelativeScale3D(FVector(0.05f, 0.02f, 0.02f));
     ProjectileMeshComponent->SetupAttachment(RootComponent);
+    //ProjectileMeshComponent->SetNetAddressable();
+    //ProjectileMeshComponent->SetIsReplicated(true);
 }
 
 // Called when the game starts or when spawned
@@ -78,5 +86,13 @@ void AProjectile::Tick(float DeltaTime)
 void AProjectile::ShootInDirection(const FVector& ShootDirection)
 {
     ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+}
+
+void AProjectile::GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME( AProjectile, ProjectileMeshComponent );
+    DOREPLIFETIME( AProjectile, ProjectileMovementComponent );
+    DOREPLIFETIME( AProjectile, CollisionComponent );
 }
 

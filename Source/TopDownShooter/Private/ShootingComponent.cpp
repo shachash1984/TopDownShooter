@@ -17,7 +17,7 @@ UShootingComponent::UShootingComponent()
 	// ...
 }
 
-void UShootingComponent::Shoot(FVector& ShootFromLocation, FVector& ShootToLocation) const
+void UShootingComponent::Shoot(FVector const & ShootFromLocation, FVector const& ShootToLocation) const
 {
 	//UE_LOG(LogTopDownShooter, Log, TEXT("Shooting from (%f, %f, %f) , To: (%f, %f, %f)"), ShootFromLocation.X, ShootFromLocation.Y, ShootFromLocation.Z, ShootToLocation.X, ShootToLocation.Y, ShootToLocation.Z);
 	UWorld* World = GetWorld();
