@@ -109,18 +109,12 @@ void ATopDownShooterPlayerController::OnTouchReleased(const ETouchIndex::Type Fi
 
 void ATopDownShooterPlayerController::OnShootPressed()
 {
-	HandleFire();
-}
-
-void ATopDownShooterPlayerController::HandleFire_Implementation()
-{
-	const auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
-	if (TopDownCharacter)
+	const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
+	if (LocalPlayer)
 	{
-		const UShootingComponent* ShootingComponent = TopDownCharacter->GetShootingComponent();
-		if (ShootingComponent)
+		const auto TopDownCharacter = static_cast<ATopDownShooterCharacter*>(GetCharacter()); 
+		if (TopDownCharacter)
 		{
-			
 			// We look for the location in the world where the player has pressed the input
 			FVector HitLocation = FVector::ZeroVector;
 			FHitResult Hit;
@@ -129,18 +123,27 @@ void ATopDownShooterPlayerController::HandleFire_Implementation()
 
 			// rotate the character to the cursor
 			TopDownCharacter->RotateToCursor(HitLocation);
-
-			FVector ViewRotationVector = TopDownCharacter->GetActorRotation().Vector();
-			ViewRotationVector.Normalize();
-			/*UE_LOG(LogTopDownShooter, Log, TEXT("ActorPos (%f, %f, %f) , To: (%f, %f, %f)"),
-				TopDownCharacter->GetActorLocation().X,
-				TopDownCharacter->GetActorLocation().Y,
-				TopDownCharacter->GetActorLocation().Z,
-				ViewRotationVector.X,
-				ViewRotationVector.Y,
-				ViewRotationVector.Z);*/
-			FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + ViewRotationVector * TopDownCharacter->MuzzleOffset;
-			ShootingComponent->Shoot(MuzzleLocation, HitLocation);
+			HandleFire(TopDownCharacter, HitLocation);
 		}
 	}
+}
+
+void ATopDownShooterPlayerController::HandleFire_Implementation(ATopDownShooterCharacter* TopDownCharacter, FVector const& HitLocation)
+{
+	const UShootingComponent* ShootingComponent = TopDownCharacter->GetShootingComponent();
+	if (ShootingComponent)
+	{
+		FVector ViewRotationVector = TopDownCharacter->GetActorRotation().Vector();
+		ViewRotationVector.Normalize();
+		/*UE_LOG(LogTopDownShooter, Log, TEXT("ActorPos (%f, %f, %f) , To: (%f, %f, %f)"),
+			TopDownCharacter->GetActorLocation().X,
+			TopDownCharacter->GetActorLocation().Y,
+			TopDownCharacter->GetActorLocation().Z,
+			ViewRotationVector.X,
+			ViewRotationVector.Y,
+			ViewRotationVector.Z);*/
+		const FVector MuzzleLocation = TopDownCharacter->GetActorLocation() + ViewRotationVector * TopDownCharacter->MuzzleOffset;
+		ShootingComponent->Shoot(MuzzleLocation, HitLocation);
+	}
+	
 }

@@ -45,7 +45,7 @@ protected:
 	virtual void OnShootPressed();
 
 	UFUNCTION(Server, Reliable)
-	void HandleFire();
+	void HandleFire(class ATopDownShooterCharacter* TopDownCharacter, FVector const& HitLocation);
 
 private:
 	bool bInputPressed; // Input is bring pressed

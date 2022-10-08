@@ -69,7 +69,7 @@ TSubclassOf<AProjectile> ATopDownShooterCharacter::GetProjectileClass() const
 	return ProjectileClass;
 }
 
-void ATopDownShooterCharacter::RotateToCursor_Implementation(const FVector& MouseCursor)
+void ATopDownShooterCharacter::RotateToCursor(const FVector& MouseCursor)
 {
 	FRotator wantedRotation = GetActorRotation();
 	FVector lookDir = MouseCursor - GetActorLocation();
@@ -81,7 +81,6 @@ void ATopDownShooterCharacter::RotateToCursor_Implementation(const FVector& Mous
 	}
 	
 	bool bSuccess = SetActorRotation(wantedRotation);
-	UE_LOG(LogTemp, Warning, TEXT("RotateToCursor_Implementation: %d"), bSuccess);
 }
 
 

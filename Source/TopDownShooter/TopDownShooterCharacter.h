@@ -31,7 +31,6 @@ public:
 	/** Returns the Projectile class*/
 	TSubclassOf<class AProjectile> GetProjectileClass() const;
 
-	UFUNCTION(Server, Reliable)
 	void RotateToCursor(const FVector& MouseCursor);
 
 	// Gun muzzle offset from the character location
